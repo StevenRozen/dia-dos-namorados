@@ -3,21 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nosso Lugar Secreto ❤️</title>
+    <title> Valentines Gift❤️</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #ffe6e6;
+        * {
+            box-sizing: border-box;
+        }
+        body, html {
             margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000; /* Fundo preto destaca mais as fotos em tela cheia */
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
             user-select: none;
+            -webkit-user-select: none;
         }
 
         /* TELA DE SENHA */
         #login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffe6e6;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 20px;
+        }
+        .login-box {
             background: white;
             padding: 35px;
             border-radius: 20px;
@@ -25,7 +43,6 @@
             text-align: center;
             max-width: 320px;
             width: 90%;
-            z-index: 20;
         }
         h2 { color: #ff4d4d; margin-top: 0; }
         input {
@@ -54,214 +71,231 @@
         button:hover { background-color: #e63939; }
         #error-message { color: #cc0000; font-size: 14px; margin-top: 10px; display: none; }
 
-        /* GALERIA DE NAVEGAÇÃO */
+        /* GALERIA EM TELA CHEIA */
         #gallery {
             display: none;
-            width: 95%;
-            max-width: 550px;
-            text-align: center;
-        }
-        
-        .slider-container {
+            width: 100%;
+            height: 100%;
             position: relative;
-            background: white;
-            padding: 15px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
         .slide {
             display: none;
             width: 100%;
-            animation: fade 0.6s ease-in-out; 
+            height: 100%;
+            animation: fade 0.8s ease-in-out;
         }
 
         @keyframes fade {
-            from { opacity: 0.3; } 
+            from { opacity: 0.2; }
             to { opacity: 1; }
         }
 
         .slide img {
             width: 100%;
-            height: 450px;
-            object-fit: contain; /* Mantém a proporção real da foto sem cortar partes importantes */
-            background-color: #fff6f6;
-            border-radius: 12px;
+            height: 100%;
+            object-fit: contain; /* Mostra a foto inteira sem cortes na tela cheia */
         }
 
-        /* Botões de Navegar (Setas) */
-        .prev, .next {
+        /* ZONAS DE TOQUE INVISÍVEIS (Estilo Stories do Instagram) */
+        .touch-zone {
             position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(255, 255, 255, 0.85);
-            color: #ff4d4d;
-            border: none;
-            font-size: 22px;
-            font-weight: bold;
-            padding: 12px 16px;
-            cursor: pointer;
-            border-radius: 50%;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            transition: 0.2s;
+            top: 0;
+            height: 100%;
             z-index: 10;
+            cursor: pointer;
+            /* Fundo totalmente transparente para não atrapalhar a visão */
+            background: transparent; 
         }
-        .prev:hover, .next:hover { background-color: #ff4d4d; color: white; }
-        .prev { left: 25px; }
-        .next { right: 25px; }
+        .touch-left {
+            left: 0;
+            width: 30%; /* 30% do lado esquerdo volta a foto */
+        }
+        .touch-right {
+            right: 0;
+            width: 70%; /* 70% do resto da tela avança a foto */
+        }
 
-        /* Indicador de páginas */
-        .counter {
-            margin-top: 15px;
-            font-size: 14px;
-            color: #777;
-            font-weight: bold;
+        /* Indicador discreto de páginas (Sumiu o contador chamativo, virou uma barra fina no topo) */
+        .progress-container {
+            position: absolute;
+            top: 10px;
+            left: 5%;
+            width: 90%;
+            display: flex;
+            gap: 4px;
+            z-index: 20;
+        }
+        .progress-bar {
+            height: 4px;
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            transition: background-color 0.3s;
+        }
+        .progress-bar.active {
+            background-color: rgba(255, 255, 255, 0.9);
         }
     </style>
 </head>
 <body>
 
+    <!-- TELA DE SENHA -->
     <div id="login-screen">
-        <h2>Valentines day ❤️</h2>
-        <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Digite a nossa senha especial para entrar.</p>
-        <input type="password" id="password-input" placeholder="Senha...">
-        <br>
-        <button onclick="checkPassword()">kaboom ✨</button>
-        <p id="error-message">Try again silly billy 😢</p>
+        <div class="login-box">
+            <h2>Valentines day❤️</h2>
+            <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Digite a nossa senha especial para entrar.</p>
+            <input type="password" id="password-input" placeholder="Senha...">
+            <br>
+            <button onclick="checkPassword()">Revelio✨</button>
+            <p id="error-message">Try again silly billy😢</p>
+        </div>
     </div>
 
+    <!-- NAVEGADOR DE FOTOS EM TELA CHEIA -->
     <div id="gallery">
-        <div class="slider-container">
+        <!-- Barrinhas de progresso discretas no topo -->
+        <div class="progress-container" id="progress-container"></div>
+
+        <!-- Áreas de toque invisíveis -->
+        <div class="touch-zone touch-left" onclick="changeSlide(-1)"></div>
+        <div class="touch-zone touch-right" onclick="changeSlide(1)"></div>
             
-            <div class="slide"><img src="https://i.postimg.cc/PxCsQ2QK/20251102-1176.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/Y9vKzbzD/CHCC1409.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/rmDXNQNY/CHCI3060-original.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/XJrSkQk2/CHCQ6300.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/W3dLwXwH/CHCQ6300-original.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/rm76nxfC/FB-IMG-1771027765751.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/DZRVjLxP/FB-IMG-1775551694912.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/SsH0TCgd/IMG-20250601-WA0016.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/3RzMSmtn/IMG-20250824-WA0004.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/V62yGnKK/IMG-20250830-WA0012.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/C19yPkcv/IMG-20250903-WA0037.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/MTgkPV9F/IMG-20250906-WA0005(1).jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/3RzMSmtq/IMG-20250906-WA0006.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/Y9TcnYdV/IMG-20250906-WA0012.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/hjNFyT26/IMG-20250913-WA0049(1).jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/HxFGZXSD/IMG-20251008-WA0012.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/tT80SWrH/IMG-20251011-WA0009.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/tT80SWrb/IMG-20251011-WA0043(1).jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/85x8KMyN/IMG-20251019-WA0023.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/bJ4XCk6q/IMG-20251028-WA0010(1).jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/G2607GM3/IMG-20251101-WA0027.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/C19yPkvh/IMG-20251101-WA0029.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/nzN8RBdc/IMG-20251101-WA0044.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/tJ6KLJf0/IMG-20251102-WA0041.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/tJ6KLJfG/IMG-20251102-WA0072(1).jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/gjhCfj5d/IMG-20251109-WA0008.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/D0G9t0DT/IMG-20251116-WA0004.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/prjwgr7v/IMG-20251122-WA0032.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/x8mwW879/IMG-20251214-WA0027.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/FzSM2zqr/IMG-20251216-WA0009.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/0jSTLj38/IMG-20251221-WA0025(1).jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/QC72RCPN/IMG-20251221-WA0028.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/NFX3WFVf/IMG-20260130-WA0041.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/9096v0SM/IMG-20260130-WA0053.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/3NGsPN6w/IMG-20260130-WA0068.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/J0Xf90g0/IMG-20260130-WA0082.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/Rhtkjh83/IMG-20260131-WA0006.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/D0G9t0DS/IMG-20260201-WA0028.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/3NGsPN64/IMG-20260201-WA0084.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/d3Cbz3XZ/IMG-20260202-WA0026.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/Xq5RTqhd/IMG-20260203-WA0017.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/GtDWZtNv/IMG-20260207-WA0010.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/D0G9t0Ds/IMG-20260317-WA0010.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/HnMqfnK0/IMG-20260405-WA0007.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/Pf8nLVq3/IMG-20260414-WA0014.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/Pf8nLVqV/IMG-20260510-WA0024.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/G3snBgpS/IMG-20260510-WA0026.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/44hRK23q/IMG-20260510-WA0028.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/sfZCBH2b/IMG-20260516-WA0022.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/Y2mB4DSJ/IMG-20260516-WA0028(1).jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/VsbPSZ6c/IMG-20260530-WA0017.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/HW71Jvxg/IMG20250726145352.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/gc6bwtJz/IMG20250726163052.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/L4ZFqQXH/IMG20250815202503.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/bY2fGVJw/IMG20251004150228.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/jqJYW35C/IMG20251004153653.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/kMtPVY42/IMG20251007190558.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/MZjJc3Tc/IMG20251011104941.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/jd00y6wt/IMG20251018145304.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/7Y88S1GH/IMG20251025083928.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/8PQQLdJj/IMG20251026125944.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/Prss1bpJ/IMG20251102085432.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/tCQQFdZ1/IMG20251102101522.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/WbLL0mFF/IMG20251115093837.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/sDdd5PQZ/IMG20251115191749.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/MK2210MQ/IMG20251116174837.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/jd00y6wP/IMG20251206100526.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/8PQQLdJL/IMG20251206194314.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/TYMMnjLV/IMG20251214112038-01.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/WbLL0mFn/IMG20251216201514.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/MK2210M5/IMG20251216201523.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/wT88D5y0/IMG20251224113232.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/KvSSt7k0/IMG20251224113245.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/SN60dXCW/IMG20251225075953.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/7Y3v9C0M/IMG20251225083207.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/SN60dXCG/IMG20251225144127.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/vHrRh1fh/IMG20251225151705.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/sDYFmB7H/IMG20251228145750.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/KvPXfKBq/IMG20251230195201.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/c4RqhKwb/IMG20251231153013.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/GhF0KBGV/IMG20260101142043.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/Fsytpf3M/IMG20260201090118.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/ZK8kH96t/IMG20260201104156.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/CLGy7Zbp/IMG20260201104354.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/J4Nwxyj8/IMG20260207090406.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/K8x6HZDV/IMG20260213151325.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/sgskNV4q/IMG20260213151340.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/RZ4kDMLk/IMG20260214130526.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/RZ4kDMT5/IMG20260221132015.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/cL0pbscd/IMG20260221132141.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/Bn4rVqCn/IMG20260222090443.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/mgBv5bSr/IMG20260222095109.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/x1nw40PN/IMG20260307123754.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/zG8scJkg/IMG20260315085800.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/nhpyPH17/IMG20260315102436.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/3x1sMPLw/IMG20260315125657.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/9Qb63vxr/IMG20260322160143.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/YCR5cJXv/IMG20260329173125.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/9Qb63vxT/IMG20260404080109.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/cLhpqVDw/IMG20260404160106.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/0ynTgLtG/IMG20260412072635.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/fRCG46Hc/IMG20260412072843.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/t4kK0Lrk/IMG20260412093834.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/Mp5Ckhsd/IMG20260412095506.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/sgmkFtnN/IMG20260419141425.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/xddW9t7F/IMG20260425075830.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/QMMRj0Pb/IMG20260425075830(1).jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/R00jvX8k/IMG20260509153711.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/q779pjSd/IMG20260509161830.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/MGrgH1JJ/IMG20260509161837.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/xddW9th1/IMG20260530150444.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/rpY7s526/IMG20260530150517.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/vmSCT5ws/Photo-from-Yuri-Vial.jpg" alt="Foto"></div>
-            <div class="slide"><img src="https://i.postimg.cc/6Q1FqCxN/Photo-from-Yuri-Vial(1).jpg" alt="Foto"></div>
-
-            <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
-            <button class="next" onclick="changeSlide(1)">&#10095;</button>
-        </div>
-
-        <div class="counter" id="slide-counter">Foto 1 de 114</div>
+        <!-- LISTA DE FOTOS -->
+        <div class="slide"><img src="https://i.postimg.cc/PxCsQ2QK/20251102-1176.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/Y9vKzbzD/CHCC1409.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/rmDXNQNY/CHCI3060-original.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/XJrSkQk2/CHCQ6300.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/W3dLwXwH/CHCQ6300-original.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/rm76nxfC/FB-IMG-1771027765751.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/DZRVjLxP/FB-IMG-1775551694912.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/SsH0TCgd/IMG-20250601-WA0016.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/3RzMSmtn/IMG-20250824-WA0004.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/V62yGnKK/IMG-20250830-WA0012.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/C19yPkcv/IMG-20250903-WA0037.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/MTgkPV9F/IMG-20250906-WA0005(1).jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/3RzMSmtq/IMG-20250906-WA0006.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/Y9TcnYdV/IMG-20250906-WA0012.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/hjNFyT26/IMG-20250913-WA0049(1).jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/HxFGZXSD/IMG-20251008-WA0012.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/tT80SWrH/IMG-20251011-WA0009.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/tT80SWrb/IMG-20251011-WA0043(1).jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/85x8KMyN/IMG-20251019-WA0023.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/bJ4XCk6q/IMG-20251028-WA0010(1).jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/G2607GM3/IMG-20251101-WA0027.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/C19yPkvh/IMG-20251101-WA0029.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/nzN8RBdc/IMG-20251101-WA0044.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/tJ6KLJf0/IMG-20251102-WA0041.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/tJ6KLJfG/IMG-20251102-WA0072(1).jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/gjhCfj5d/IMG-20251109-WA0008.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/D0G9t0DT/IMG-20251116-WA0004.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/prjwgr7v/IMG-20251122-WA0032.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/x8mwW879/IMG-20251214-WA0027.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/FzSM2zqr/IMG-20251216-WA0009.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/0jSTLj38/IMG-20251221-WA0025(1).jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/QC72RCPN/IMG-20251221-WA0028.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/NFX3WFVf/IMG-20260130-WA0041.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/9096v0SM/IMG-20260130-WA0053.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/3NGsPN6w/IMG-20260130-WA0068.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/J0Xf90g0/IMG-20260130-WA0082.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/Rhtkjh83/IMG-20260131-WA0006.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/D0G9t0DS/IMG-20260201-WA0028.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/3NGsPN64/IMG-20260201-WA0084.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/d3Cbz3XZ/IMG-20260202-WA0026.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/Xq5RTqhd/IMG-20260203-WA0017.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/GtDWZtNv/IMG-20260207-WA0010.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/D0G9t0Ds/IMG-20260317-WA0010.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/HnMqfnK0/IMG-20260405-WA0007.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/Pf8nLVq3/IMG-20260414-WA0014.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/Pf8nLVqV/IMG-20260510-WA0024.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/G3snBgpS/IMG-20260510-WA0026.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/44hRK23q/IMG-20260510-WA0028.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/sfZCBH2b/IMG-20260516-WA0022.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/Y2mB4DSJ/IMG-20260516-WA0028(1).jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/VsbPSZ6c/IMG-20260530-WA0017.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/HW71Jvxg/IMG20250726145352.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/gc6bwtJz/IMG20250726163052.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/L4ZFqQXH/IMG20250815202503.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/bY2fGVJw/IMG20251004150228.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/jqJYW35C/IMG20251004153653.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/kMtPVY42/IMG20251007190558.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/MZjJc3Tc/IMG20251011104941.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/jd00y6wt/IMG20251018145304.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/7Y88S1GH/IMG20251025083928.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/8PQQLdJj/IMG20251026125944.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/Prss1bpJ/IMG20251102085432.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/tCQQFdZ1/IMG20251102101522.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/WbLL0mFF/IMG20251115093837.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/sDdd5PQZ/IMG20251115191749.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/MK2210MQ/IMG20251116174837.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/jd00y6wP/IMG20251206100526.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/8PQQLdJL/IMG20251206194314.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/TYMMnjLV/IMG20251214112038-01.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/WbLL0mFn/IMG20251216201514.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/MK2210M5/IMG20251216201523.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/wT88D5y0/IMG20251224113232.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/KvSSt7k0/IMG20251224113245.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/SN60dXCW/IMG20251225075953.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/7Y3v9C0M/IMG20251225083207.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/SN60dXCG/IMG20251225144127.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/vHrRh1fh/IMG20251225151705.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/sDYFmB7H/IMG20251228145750.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/KvPXfKBq/IMG20251230195201.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/c4RqhKwb/IMG20251231153013.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/GhF0KBGV/IMG20260101142043.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/Fsytpf3M/IMG20260201090118.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/ZK8kH96t/IMG20260201104156.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/CLGy7Zbp/IMG20260201104354.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/J4Nwxyj8/IMG20260207090406.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/K8x6HZDV/IMG20260213151325.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/sgskNV4q/IMG20260213151340.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/RZ4kDMLk/IMG20260214130526.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/RZ4kDMT5/IMG20260221132015.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/cL0pbscd/IMG20260221132141.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/Bn4rVqCn/IMG20260222090443.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/mgBv5bSr/IMG20260222095109.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/x1nw40PN/IMG20260307123754.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/zG8scJkg/IMG20260315085800.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/nhpyPH17/IMG20260315102436.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/3x1sMPLw/IMG20260315125657.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/9Qb63vxr/IMG20260322160143.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/YCR5cJXv/IMG20260329173125.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/9Qb63vxT/IMG20260404080109.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/cLhpqVDw/IMG20260404160106.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/0ynTgLtG/IMG20260412072635.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/fRCG46Hc/IMG20260412072843.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/t4kK0Lrk/IMG20260412093834.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/Mp5Ckhsd/IMG20260412095506.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/sgmkFtnN/IMG20260419141425.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/xddW9t7F/IMG20260425075830.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/QMMRj0Pb/IMG20260425075830(1).jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/R00jvX8k/IMG20260509153711.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/q779pjSd/IMG20260509161830.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/MGrgH1JJ/IMG20260509161837.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/xddW9th1/IMG20260530150444.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/rpY7s526/IMG20260530150517.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/vmSCT5ws/Photo-from-Yuri-Vial.jpg" alt="Foto"></div>
+        <div class="slide"><img src="https://i.postimg.cc/6Q1FqCxN/Photo-from-Yuri-Vial(1).jpg" alt="Foto"></div>
     </div>
 
     <script>
-        // CONFIGURAÇÕES DA SUA PÁGINA:
-        const SENHA_CORRETA = "loveyou"; // Altere para a senha que desejar aqui
-        const TEMPO_TROCA = 10000;     // Tempo fixado em 2 segundos (2000ms)
+        const SENHA_CORRETA = "iloveyou"; // Defina sua senha secreta aqui
+        const TEMPO_TROCA = 10000;     // 2 segundos
 
         let currentSlideIndex = 0;
         let autoSlideTimer;
+        const slides = document.getElementsByClassName("slide");
+
+        // Cria as barrinhas de progresso no topo dinamicamente baseado na quantidade de fotos
+        function createProgressBars() {
+            const container = document.getElementById('progress-container');
+            container.innerHTML = '';
+            for (let i = 0; i < slides.length; i++) {
+                const bar = document.createElement('div');
+                bar.classList.add('progress-bar');
+                container.appendChild(bar);
+            }
+        }
 
         function checkPassword() {
             const input = document.getElementById('password-input').value;
@@ -270,6 +304,7 @@
             if (input === SENHA_CORRETA) {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('gallery').style.display = 'block';
+                createProgressBars();
                 showSlide(currentSlideIndex);
                 startAutoSlide();
             } else {
@@ -278,18 +313,26 @@
         }
 
         function showSlide(index) {
-            const slides = document.getElementsByClassName("slide");
-            const counter = document.getElementById("slide-counter");
-            
             if (index >= slides.length) { currentSlideIndex = 0; }
             if (index < 0) { currentSlideIndex = slides.length - 1; }
 
+            // Esconde todas as fotos
             for (let i = 0; i < slides.length; i++) {
                 slides[i].style.display = "none";
             }
 
+            // Mostra a foto atual
             slides[currentSlideIndex].style.display = "block";
-            counter.innerText = `Foto ${currentSlideIndex + 1} de ${slides.length}`;
+            
+            // Atualiza as barrinhas de progresso discretas no topo
+            const bars = document.getElementsByClassName('progress-bar');
+            for (let i = 0; i < bars.length; i++) {
+                if (i <= currentSlideIndex) {
+                    bars[i].classList.add('active');
+                } else {
+                    bars[i].classList.remove('active');
+                }
+            }
         }
 
         function startAutoSlide() {
